@@ -1,0 +1,23 @@
+[
+  {
+    "archive": "qtbase.tar.xz",
+    "sha256": "aeb78d29291a2b5fd53cb55950f8f5065b4978c25fb1d77f627d695ab9adf21e",
+    "notices": 186,
+    "version": "6.10.2",
+    "source": "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/"
+  },
+  {
+    "archive": "qtimageformats.tar.xz",
+    "sha256": "8b8f9c718638081e7b3c000e7f31910140b1202a98e98df5d1b496fe6f639d67",
+    "notices": 13,
+    "version": "6.10.2",
+    "source": "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/"
+  },
+  {
+    "archive": "qtsvg.tar.xz",
+    "sha256": "f07ff80f38caf235187200345392ca7479445ddf49a36c3694cd52a735dad6e1",
+    "notices": 11,
+    "version": "6.10.2",
+    "source": "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/"
+  }
+]
