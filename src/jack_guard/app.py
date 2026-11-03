@@ -366,7 +366,7 @@ def main(argv=None):
                         {
                             "gui": "PASS",
                             "overlay_restore": "PASS",
-                            "hotkeys": "PASS" if not controller.hotkey_error else "CONFLICT",
+                            "hotkeys": "PASS" if not controller.hotkey_error else "FAIL",
                             "screens": len(app.screens()),
                             "tray_available": QSystemTrayIcon.isSystemTrayAvailable(),
                         },

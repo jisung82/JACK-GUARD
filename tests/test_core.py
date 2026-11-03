@@ -63,6 +63,22 @@ def test_hotkey_cleanup():
     assert api.UnregisterHotKey.call_count == 2
 
 
+@pytest.mark.parametrize("code, message", [(1409, "충돌"), (5, "접근 거부")])
+def test_hotkey_error_distinguishes_collision_from_access_denied(code, message):
+    import ctypes
+
+    def fail(*args):
+        ctypes.set_last_error(code)
+        return 0
+
+    api = Mock()
+    api.RegisterHotKey.side_effect = fail
+    keys = Hotkeys([], api)
+    with pytest.raises(OSError, match=message):
+        keys.register(["Ctrl+Alt+L"])
+    assert not keys.registered
+
+
 def test_config_roundtrip_acl_and_export(tmp_path):
     store = Store(tmp_path / "data")
     value = Settings(password=hash_password("some secret"), terminate=True)

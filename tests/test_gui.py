@@ -1,4 +1,5 @@
 import os
+from unittest.mock import Mock
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
@@ -8,6 +9,7 @@ from PySide6.QtWidgets import QApplication, QSystemTrayIcon
 
 from jack_guard.app import Controller
 from jack_guard.config.store import Store
+from jack_guard.core.hotkeys import Hotkeys
 from jack_guard.core.privacy import Privacy
 from jack_guard.ui.main_window import MainWindow
 from jack_guard.ui.settings import SettingsDialog
@@ -33,6 +35,9 @@ def test_privacy_all_screens_restore(app):
 
 
 def test_controller_lifecycle_settings_and_tray(app, tmp_path, monkeypatch):
+    # Native registration is tested by the package smoke; lifecycle tests are isolated
+    # from shortcuts owned by other applications on the developer's desktop.
+    monkeypatch.setattr("jack_guard.app.Hotkeys", lambda callbacks: Hotkeys(callbacks, Mock()))
     monkeypatch.setattr(QSystemTrayIcon, "isSystemTrayAvailable", lambda: True)
     monkeypatch.setattr("jack_guard.core.startup.is_enabled", lambda: False)
     monkeypatch.setattr("jack_guard.core.startup.set_enabled", lambda v: None)

@@ -40,9 +40,17 @@ class Hotkeys(QAbstractNativeEventFilter):
             raise ValueError("단축키 중복")
         self.close()
         for identifier, (mods, key) in enumerate(parsed, 1):
+            ctypes.set_last_error(0)
             if not self.api.RegisterHotKey(None, identifier, mods, key):
+                error = ctypes.get_last_error()
                 self.close()
-                raise OSError(f"단축키 충돌: {texts[identifier - 1]}")
+                if error == 1409:
+                    detail = "단축키 충돌"
+                elif error == 5:
+                    detail = "단축키 등록 접근 거부"
+                else:
+                    detail = "단축키 등록 실패"
+                raise OSError(f"{detail}: {texts[identifier - 1]} (Windows 오류 {error})")
             self.registered.append(identifier)
 
     def close(self):
