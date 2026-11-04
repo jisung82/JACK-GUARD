@@ -36,6 +36,7 @@ from jack_guard.core.process_monitor import ProcessMonitor
 from jack_guard.core.windows_lock import lock_workstation
 from jack_guard.logging.events import Events
 from jack_guard.security.passwords import verify_password
+from jack_guard.ui.colors import COLOR_HELP, color_stylesheet, parse_color
 from jack_guard.ui.design import STYLE, terminal_font
 from jack_guard.ui.main_window import MainWindow
 from jack_guard.ui.settings import SettingsDialog
@@ -114,6 +115,8 @@ class Controller:
         self.process_pool = QThreadPool()
         self.process_pool.setMaxThreadCount(1)
         self.animation_report = {}
+        self.color_code = None
+        self.last_color_errorlevel = 0
         self.hotkey_error = ""
         self.failed_auth = 0
         self.auth_after = 0.0
@@ -194,6 +197,8 @@ class Controller:
         }
         for key, (text, color) in values.items():
             self.window.states[key].setText(text)
+            if self.window.terminal_colors:
+                color = self.window.terminal_colors[1]
             self.window.states[key].setStyleSheet(f"color:{color}")
         self.window.hotkey_label.setText(
             self.hotkey_error
@@ -361,6 +366,8 @@ class Controller:
             self.window.intro.finish("command")
         command = " ".join(str(raw).strip().lower().split())
         self.window.write(f"jack@guard > {raw}")
+        if command == "color" or command.startswith("color "):
+            return self.color_command(command.split()[1:])
         if command not in COMMANDS:
             self.window.write("ERROR  Unknown command. Type help.\n")
             return False
@@ -409,6 +416,34 @@ class Controller:
         elif command == "exit":
             self.quit()
         return True
+
+    def color_command(self, arguments):
+        if arguments == ["/?"]:
+            self.window.write(COLOR_HELP)
+            self.last_color_errorlevel = 0
+            return True
+        try:
+            if len(arguments) > 1:
+                raise ValueError("COLOR: 색 코드는 공백 없이 지정하세요. color /?")
+            if not arguments:
+                self.window.terminal_colors = None
+                self.color_code = None
+                self.window.setStyleSheet("")
+            else:
+                code, colors = parse_color(arguments[0])
+                self.window.setStyleSheet(color_stylesheet(*colors))
+                self.window.terminal_colors = colors
+                self.color_code = code
+            self.last_color_errorlevel = 0
+            self.refresh()
+            self.window.write(
+                f"OK  COLOR {self.color_code}" if self.color_code else "OK  기본 색상 복원."
+            )
+            return True
+        except ValueError as error:
+            self.last_color_errorlevel = 1
+            self.window.write(f"ERRORLEVEL 1  {error}")
+            return False
 
     def show_logs(self):
         try:
@@ -591,8 +626,18 @@ def main(argv=None):
                 controller.execute_command("status")
                 controller.execute_command("version")
                 assert "TERMINAL EDITION" in controller.window.console.toPlainText()
+                assert controller.execute_command("color 0a")
+                assert controller.color_code == "0A"
+                assert not controller.execute_command("color aa")
+                assert controller.color_code == "0A" and controller.last_color_errorlevel == 1
+                assert controller.execute_command("color a")
+                assert controller.execute_command("color f0")
+                assert controller.execute_command("color /?")
+                assert controller.execute_command("color")
+                assert controller.window.terminal_colors is None
                 if args.screenshot:
                     controller.window.grab().save(str(args.screenshot))
+                controller.execute_command("color 1f")
                 controller.window.intro.start(3, 5, False)
                 QTimer.singleShot(1100, smoke_animation)
             except Exception:
@@ -602,6 +647,7 @@ def main(argv=None):
             try:
                 assert not controller.window.intro.active
                 assert controller.animation_report["reason"] == "complete"
+                controller.execute_command("color")
                 controller.window.intro.start(1, 8, False)
                 controller.window.resize(900, 600)
                 QTimer.singleShot(80, smoke_finish)
@@ -623,6 +669,7 @@ def main(argv=None):
                         {
                             "gui": "PASS",
                             "commands": "PASS",
+                            "color": "PASS",
                             "intro": "PASS",
                             "intro_resize_skip": "PASS",
                             "overlay_restore": "PASS",

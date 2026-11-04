@@ -16,6 +16,8 @@ COMMANDS = (
     "settings",
     "version",
     "clear",
+    "color",
+    "color /?",
     "exit",
 )
 
@@ -31,6 +33,7 @@ HELP = """JACK GUARD BUILT-IN COMMANDS
   settings            설정 열기
   version             버전 확인
   clear               콘솔 출력 지우기
+  color [색 코드]     CMD 방식 색상 변경; color /? 도움말
   exit                정상 종료
   help                이 도움말
 

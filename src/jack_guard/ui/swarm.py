@@ -9,6 +9,7 @@ from PySide6.QtCore import QEvent, QPoint, QPointF, QRectF, Qt, QTimer, Signal
 from PySide6.QtGui import QColor, QPainter, QPen, QPolygonF
 from PySide6.QtWidgets import QPushButton, QWidget
 
+from jack_guard.ui.colors import border_color
 from jack_guard.ui.design import ACCENT, BG, BORDER, MUTED, TEXT, terminal_font
 
 
@@ -140,7 +141,9 @@ class SwarmOverlay(QWidget):
         self.paint_count += 1
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        painter.fillRect(self.rect(), QColor(BG))
+        background, foreground = self.window.terminal_colors or (BG, TEXT)
+        border = border_color(background, foreground) if self.window.terminal_colors else BORDER
+        painter.fillRect(self.rect(), QColor(background))
         t = self.elapsed
         starts = [0.15, 0.65, 1.05, 1.35, 1.75, 2.15]
         if t >= 2.55:
@@ -170,7 +173,7 @@ class SwarmOverlay(QWidget):
                         ),
                     )
                 painter.restore()
-                painter.setPen(QPen(QColor(BORDER), 1))
+                painter.setPen(QPen(QColor(border), 1))
                 painter.drawLine(
                     rect.topLeft(), QPointF(rect.left() + rect.width() * ease(progress), rect.top())
                 )
@@ -199,8 +202,12 @@ class SwarmOverlay(QWidget):
                     point = point * (1 - depart) + QPointF(self.width() + 20, -20) * depart
                 painter.save()
                 painter.translate(point)
-                painter.setPen(QPen(QColor(BG), 1))
-                painter.setBrush(QColor(ACCENT if i == 0 else TEXT))
+                painter.setPen(QPen(QColor(background), 1))
+                painter.setBrush(
+                    QColor(
+                        foreground if self.window.terminal_colors else ACCENT if i == 0 else TEXT
+                    )
+                )
                 painter.drawPolygon(
                     QPolygonF(
                         [
@@ -215,7 +222,7 @@ class SwarmOverlay(QWidget):
                     )
                 )
                 painter.restore()
-        painter.setPen(QColor(MUTED))
+        painter.setPen(QColor(foreground if self.window.terminal_colors else MUTED))
         painter.setFont(terminal_font(9))
         painter.drawText(28, self.height() - 14, "REBUILD / any key or click to skip")
         painter.end()

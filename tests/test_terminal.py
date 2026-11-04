@@ -6,6 +6,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 import pytest
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QPalette
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QMessageBox, QSystemTrayIcon
 
@@ -13,6 +14,7 @@ from jack_guard.app import Controller
 from jack_guard.config.store import Store, validate
 from jack_guard.core.hotkeys import Hotkeys
 from jack_guard.security.passwords import hash_password
+from jack_guard.ui.colors import parse_color
 from jack_guard.ui.main_window import MainWindow
 from jack_guard.ui.swarm import SwarmOverlay
 from jack_guard.ui.terminal import COMMANDS, CommandLine
@@ -228,3 +230,64 @@ def test_swarm_reduces_motion_when_frames_are_slow(app):
     assert reports[-1]["reason"] == "reduced-frame-rate"
     assert not overlay.timer.isActive()
     window.close()
+
+
+@pytest.mark.parametrize(
+    "code, expected",
+    [
+        ("0A", ("#000000", "#00FF00")),
+        ("1f", ("#000080", "#FFFFFF")),
+        ("F0", ("#FFFFFF", "#000000")),
+        ("84", ("#808080", "#800000")),
+        ("a", ("#000000", "#00FF00")),
+        ("E", ("#000000", "#FFFF00")),
+    ],
+)
+def test_cmd_color_rules(code, expected):
+    _, colors = parse_color(code)
+    assert colors == expected
+
+
+@pytest.mark.parametrize("code", ["00", "aa", "FF", "0", "GG", "010", "0A;calc", "", True])
+def test_cmd_color_rejects_equal_or_invalid_values(code):
+    with pytest.raises(ValueError):
+        parse_color(code)
+
+
+def test_color_actual_widgets_reset_help_and_no_persistence(controller, monkeypatch):
+    shell = Mock(side_effect=AssertionError("No shell"))
+    monkeypatch.setattr("subprocess.run", shell)
+    assert controller.execute_command("COLOR 0a")
+    QApplication.processEvents()
+    assert controller.color_code == "0A"
+    assert controller.window.console.palette().color(QPalette.ColorRole.Base).name() == "#000000"
+    assert controller.window.console.palette().color(QPalette.ColorRole.Text).name() == "#00ff00"
+    assert controller.window.command.palette().color(QPalette.ColorRole.Text).name() == "#00ff00"
+    assert not controller.execute_command("color AA")
+    assert controller.last_color_errorlevel == 1 and controller.color_code == "0A"
+    assert controller.execute_command("color /?")
+    assert "첫째 = 배경" in controller.window.console.toPlainText()
+    assert controller.color_code == "0A"
+    assert not controller.execute_command("color 1 F")
+    assert controller.color_code == "0A"
+    assert controller.execute_command("color")
+    assert controller.window.styleSheet() == "" and controller.window.terminal_colors is None
+    assert controller.last_color_errorlevel == 0
+    assert not controller.store.path.exists()
+    shell.assert_not_called()
+
+
+def test_color_replay_background_matches_current_theme(controller):
+    controller.execute_command("color 1f")
+    controller.window.intro.start(1, 5, False)
+    QTest.qWait(30)
+    image = controller.window.intro.grab().toImage()
+    assert image.pixelColor(10, 100).name() == "#000080"
+    controller.window.intro.finish("test")
+    controller.execute_command("color f0")
+    QApplication.processEvents()
+    assert controller.window.console.palette().color(QPalette.ColorRole.Text).name() == "#000000"
+    assert (
+        controller.window.states["HOTKEY"].palette().color(QPalette.ColorRole.WindowText).name()
+        == "#000000"
+    )

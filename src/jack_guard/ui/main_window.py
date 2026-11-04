@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.controller = None
+        self.terminal_colors = None
         self.intro = None
         self.setWindowTitle("JACK GUARD — TERMINAL EDITION")
         self.resize(1100, 700)
