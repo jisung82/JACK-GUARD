@@ -20,15 +20,34 @@ class Settings:
     exceptions: list[str] = field(default_factory=list)
     retention_days: int = 30
     password: dict = field(default_factory=dict)
+    swarm_enabled: bool = True
+    swarm_every_launch: bool = False
+    reduce_motion: bool = True
+    swarm_speed: int = 1
+    swarm_cursors: int = 5
+    intro_seen: bool = False
 
 
 def validate(data):
     if not isinstance(data, dict) or set(data) - set(asdict(Settings())):
         raise ValueError("알 수 없는 설정 형식")
     result = Settings(**data)
-    for key in ("monitor", "notifications", "overlay", "terminate"):
+    for key in (
+        "monitor",
+        "notifications",
+        "overlay",
+        "terminate",
+        "swarm_enabled",
+        "swarm_every_launch",
+        "reduce_motion",
+        "intro_seen",
+    ):
         if type(getattr(result, key)) is not bool:
             raise ValueError("잘못된 설정 값")
+    if type(result.swarm_speed) is not int or result.swarm_speed not in (1, 2, 3):
+        raise ValueError("애니메이션 속도: 1x / 2x / 3x")
+    if type(result.swarm_cursors) is not int or result.swarm_cursors not in (3, 5, 8):
+        raise ValueError("커서 수: 3 / 5 / 8")
     for key in ("games", "exceptions"):
         paths = getattr(result, key)
         if not isinstance(paths, list) or len(paths) > 100:
