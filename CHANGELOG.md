@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 — CMD-style color command, local release candidate
+
+- Add `color`, `color /?`, one/two hexadecimal digits and all 16 classic console colors.
+- Apply session colors to existing terminal content, controls and Swarm replay; restore the
+  original app theme with bare `color`. No settings persistence or system shell invocation.
+- Reject equal foreground/background and invalid values without changing colors; report ERRORLEVEL 1.
+- Validate actual widget palettes, theme reset and replay backgrounds with regression tests.
+
 ## 0.2.0 — Terminal Edition, local release candidate
 
 - Replace the dashboard with a monochrome terminal interface, native window frame,

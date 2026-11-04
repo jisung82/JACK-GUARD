@@ -1,0 +1,35 @@
+[
+  {
+    "code": "0A",
+    "active": "0A",
+    "colors": [
+      "#000000",
+      "#00FF00"
+    ],
+    "result": "PASS"
+  },
+  {
+    "code": "1F",
+    "active": "1F",
+    "colors": [
+      "#000080",
+      "#FFFFFF"
+    ],
+    "result": "PASS"
+  },
+  {
+    "code": "F0",
+    "active": "F0",
+    "colors": [
+      "#FFFFFF",
+      "#000000"
+    ],
+    "result": "PASS"
+  },
+  {
+    "code": "default",
+    "active": null,
+    "colors": null,
+    "result": "PASS"
+  }
+]

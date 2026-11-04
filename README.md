@@ -3,7 +3,7 @@
 Windows 10 (1809 이상)/11 x64용 한국어 개인 프라이버시 보조 도구. 관리자 권한 없이 실행합니다.
 Python 3.12 · PySide6(Qt Widgets) · psutil · PyInstaller.
 
-**현재: 로컬 0.2.0 Terminal Edition 배포 후보. GitHub 공개 및 라이선스 선택 승인 전입니다.**
+**현재: 로컬 0.2.1 Terminal Edition 배포 후보. GitHub 공개 및 라이선스 선택 승인 전입니다.**
 공개 저장소·실제 Release·서명된 파일이 존재한다고 주장하지 않습니다.
 
 ![실제 Terminal Edition 화면](assets/screenshots/100/terminal.png)
@@ -23,6 +23,7 @@ privacy on           privacy off
 monitor status       monitor on           monitor off
 process list         logs                 logs clear
 settings             version              clear             exit
+color                color /?             color 0A
 ```
 
 Tab으로 명령을 완성하고 ↑/↓로 메모리 내 최근 100개 명령을 탐색합니다.
@@ -30,6 +31,19 @@ F1은 도움말, Ctrl+K는 입력 포커스, Esc는 입력 취소입니다.
 `process list`는 현재 사용자 프로세스를 비동기로 조회합니다.
 `logs clear`와 감지 설정 변경에는 기존 설정 비밀번호 보호가 적용됩니다.
 PowerShell·CMD·시스템 명령 실행이나 셸 확장은 지원하지 않습니다.
+
+### CMD-style COLOR
+
+![실제 color 0A 화면](assets/screenshots/colors/color-0A.png)
+
+`color 0A`는 검정 배경/밝은 녹색, `color 1F`는 파란 배경/밝은 흰색,
+`color F0`는 흰 배경/검정 글자를 적용합니다. 한 자리 `color A`도 지원합니다.
+두 자리의 첫째는 배경, 둘째는 글자이며 0~9/A~F를 대소문자 구분 없이 받습니다.
+`color /?`는 16색 표를 표시하고, `color`만 입력하면 앱 시작 시 기본 테마로 복원합니다.
+동일한 두 자리 코드는 기존 색상을 유지하고 ERRORLEVEL 1을 표시합니다.
+현재 창과 Replay에만 적용되며 사용자 설정에 저장하거나 Windows/CMD 설정을 바꾸지 않습니다.
+색 이름·코드와 복원/오류 동작은 [Microsoft COLOR 문서](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/color)를
+참고했으며 실제 RGB는 클래식 16색 표를 사용합니다. Windows Terminal의 사용자 지정 팔레트와는 다를 수 있습니다.
 
 ## Swarm interaction
 

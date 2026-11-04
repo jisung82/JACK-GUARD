@@ -17,9 +17,10 @@ def package_outputs():
         dirs_exist_ok=True,
         ignore=shutil.ignore_patterns("licenses"),
     )
-    pictures = ROOT / "assets" / "screenshots" / "100"
-    if pictures.exists():
-        shutil.copytree(pictures, folder / "assets" / "screenshots" / "100", dirs_exist_ok=True)
+    for name in ("100", "colors"):
+        pictures = ROOT / "assets" / "screenshots" / name
+        if pictures.exists():
+            shutil.copytree(pictures, folder / "assets" / "screenshots" / name, dirs_exist_ok=True)
     shutil.make_archive(
         str(ROOT / "dist" / "JACK-GUARD-portable"), "zip", ROOT / "dist" / "portable", "JACK-GUARD"
     )
