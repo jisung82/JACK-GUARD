@@ -7,7 +7,7 @@
 1. JACK GUARD의 자체 소스코드에 MIT 라이선스를 적용할지 선택.
    Qt/PySide6 등 제3자 라이선스는 별도로 유지합니다.
 2. GitHub 계정 `jisung82`에 공개 저장소 `JACK-GUARD`를 생성하고 소스를 업로드할지 승인.
-3. 원격 CI 성공 후 `v0.1.0` 태그와 첫 Release를 발행하고
+3. 원격 CI 성공 후 `v0.2.0` 태그와 첫 Release를 발행하고
    `JACK-GUARD.exe`, `JACK-GUARD-portable.zip`, `SHA256SUMS.txt`를 공개할지 승인.
 
 승인 후에는 선택한 라이선스를 적용하고, 문서 상태를 갱신하며, 실행파일을 다시 빌드합니다.

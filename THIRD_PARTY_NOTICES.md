@@ -30,3 +30,5 @@ See upstream sources for subcomponent copyrights and license notices.
 The upstream source URLs were checked successfully during local packaging.
 Build-only tools (pytest, Ruff, setuptools, packaging and hooks) are not application imports;
 their versions are fixed in requirements-dev.lock. This is a component inventory, not legal advice.
+Pillow 12.1.0 (HPND and bundled notices) is used only by the visual QA/GIF capture script,
+not imported by the application and not part of the frozen runtime dependency set.

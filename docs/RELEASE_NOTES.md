@@ -1,4 +1,4 @@
-# JACK GUARD 0.1.0
+# JACK GUARD 0.2.0
 
 첫 배포 후보: Windows 잠금 요청, 사용자 지정 전역 단축키, 트레이, 창 숨김/다중 화면 가림,
 전체 실행파일 경로 게임 감지, 예외 목록 및 명시적 동의 기반 본인 프로세스 종료,
@@ -8,6 +8,8 @@ Portable ZIP은 전체 압축 해제 후 실행하세요. Python 설치 불필�
 코드 서명 없음: SmartScreen 경고 가능. SHA256SUMS.txt를 함께 확인하세요.
 화면 가림은 Windows 잠금이 아니며 설정 비밀번호는 OS 접근 통제가 아닙니다.
 
-로컬 테스트와 미실행 수동 테스트는 docs/TEST_RESULTS.md를 참고하세요.
+로컬 테스트와 미실행 수동 테스트는 docs/TERMINAL_QA.md를 참고하세요.
 Windows 실제 잠금/해제 및 OS 버전별 수동 수락 검증은 별도 필요합니다.
 완전한 영어 UI, 자동 업데이트 및 코드 서명은 포함되지 않습니다.
+
+Terminal Edition: 실제 내장 명령어·Tab 자동완성·명령 기록, 모노크롬 UI, Swarm 인트로, 모션 감소 및 Replay 설정 추가.

@@ -1,10 +1,46 @@
-# JACK GUARD
+# JACK GUARD / TERMINAL EDITION
 
 Windows 10 (1809 이상)/11 x64용 한국어 개인 프라이버시 보조 도구. 관리자 권한 없이 실행합니다.
 Python 3.12 · PySide6(Qt Widgets) · psutil · PyInstaller.
 
-**현재: 로컬 0.1.0 배포 후보. GitHub 공개 및 라이선스 선택 승인 전입니다.**
+**현재: 로컬 0.2.0 Terminal Edition 배포 후보. GitHub 공개 및 라이선스 선택 승인 전입니다.**
 공개 저장소·실제 Release·서명된 파일이 존재한다고 주장하지 않습니다.
+
+![실제 Terminal Edition 화면](assets/screenshots/100/terminal.png)
+
+![실제 Swarm 인트로 녹화](assets/screenshots/100/swarm-intro.gif)
+
+캡처에는 검증 전용 단축키가 표시되어 있습니다. 일반 실행 기본값은 아래 표와 같습니다.
+
+## Control shell
+
+명령 입력은 Windows 셸이 아닌 JACK GUARD의 제한된 내장 명령 인터페이스입니다.
+GUI와 같은 잠금·감지·프라이버시·설정 보호 백엔드를 사용합니다.
+
+```text
+help                 status               lock
+privacy on           privacy off
+monitor status       monitor on           monitor off
+process list         logs                 logs clear
+settings             version              clear             exit
+```
+
+Tab으로 명령을 완성하고 ↑/↓로 메모리 내 최근 100개 명령을 탐색합니다.
+F1은 도움말, Ctrl+K는 입력 포커스, Esc는 입력 취소입니다.
+`process list`는 현재 사용자 프로세스를 비동기로 조회합니다.
+`logs clear`와 감지 설정 변경에는 기존 설정 비밀번호 보호가 적용됩니다.
+PowerShell·CMD·시스템 명령 실행이나 셸 확장은 지원하지 않습니다.
+
+## Swarm interaction
+
+앱 내부 QPainter로 5개 가상 커서가 실제 UI 영역을 순차적으로 조립합니다.
+기본 인트로는 약 2.8초, 첫 실행에만 재생합니다. 트레이 복원에는 재생하지 않습니다.
+Animation 탭에서 활성화·매 실행 재생·자동 모션 감소·1x/2x/3x·3/5/8개 커서를 설정합니다.
+Replay는 저장된 설정으로 실행합니다. Windows 모션 감소 설정은 항상 우선합니다.
+아무 키나 클릭하면 즉시 건너뛰고, 인트로 중에도 `Ctrl+Shift+L` 또는 LOCK NOW 버튼으로
+실제 Windows 잠금을 요청할 수 있습니다. 일반 전역 잠금 단축키도 유지됩니다.
+애니메이션 완료 후 렌더 타이머를 정지하며, 느린 프레임이 지속되면 자동 완성 화면으로 전환합니다.
+실측 성능과 배율별 검증 범위는 [Terminal 검증 기록](docs/TERMINAL_QA.md)에 있습니다.
 
 ## 사용
 
@@ -69,6 +105,10 @@ python scripts/build.py
 python scripts/smoke.py dist/JACK-GUARD.exe
 ```
 
+실제 화면 캡처·성능 측정: `python scripts/visual_qa.py --output work/visual --data-dir work/data --gif`.
+검증 폴더와 임시 단축키만 사용합니다. `QT_SCALE_FACTOR=1/1.25/1.5/2`로 Qt 배율을 바꿔
+레이아웃을 검사할 수 있습니다. Windows 디스플레이 설정을 직접 변경하는 테스트와는 구분합니다.
+
 `dist/`에 단일 EXE, Portable ZIP, `SHA256SUMS.txt`가 생성됩니다.
 소스 실행 시 전용 가상환경 설치 경로를 이동하면 자동 시작을 다시 설정하세요.
 다른 앱과 단축키가 충돌하면 설정을 적용하지 않으며 메인 화면에 오류를 표시합니다.
@@ -78,7 +118,7 @@ CI는 Windows 빌드·Ruff·pytest·패키지 스모크 및 아티팩트 업로�
 `v*` 태그 워크플로는 버전·라이선스·테스트를 확인하고 Release 자산을 첨부합니다.
 Action은 커밋 SHA로 고정하며 PR 권한은 읽기 전용, Release 작업만 contents:write입니다.
 태그 생성은 공개 릴리스를 발행하므로 소유자의 승인을 받은 후 진행하세요.
-실제 실행 결과 및 미실행 항목은 [검증 기록](docs/TEST_RESULTS.md)을 참고하세요.
+실제 실행 결과 및 미실행 항목은 [Terminal 검증 기록](docs/TERMINAL_QA.md)을 참고하세요.
 
 ## 라이선스와 한계
 

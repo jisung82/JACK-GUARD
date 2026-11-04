@@ -33,6 +33,8 @@ def main():
         report = json.loads((data / "smoke-result.json").read_text(encoding="utf-8"))
         assert result.returncode == 0 and report["gui"] == "PASS"
         assert report["overlay_restore"] == "PASS"
+        assert report["commands"] == "PASS"
+        assert report["intro"] == "PASS" and report["intro_resize_skip"] == "PASS"
         assert report["hotkeys"] == "PASS", "Test hotkeys could not be registered"
         print(json.dumps(report, indent=2))
 

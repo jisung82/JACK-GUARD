@@ -5,6 +5,13 @@ an OS lock; Windows handles unlocking. Overlays do not prevent access to the des
 No input hooks, input blocking, privilege escalation, policy bypass, network transfer,
 remote control, service, driver, self-protection or forced reboot is implemented.
 
+The terminal accepts an exact allowlist of application commands. It never evaluates user code,
+expands shell syntax or sends input to a system shell. GUI and commands use the same controller.
+Command history is limited to 100 entries in memory and is not written to event logs.
+The process list displays only current-account process names and PIDs and is not persisted.
+Swarm cursors are painted inside the app; they never move the OS pointer. The intro can be skipped,
+does not disable global lock shortcuts, and its repaint timer stops on completion/skip/exit.
+
 Settings passwords use independent 32-byte salts and PBKDF2-HMAC-SHA256 (600,000 rounds),
 constant-time digest comparison and increasing retry delays. Passwords protect this UI,
 not files against the same account or administrators. Exit and local reset remain available.

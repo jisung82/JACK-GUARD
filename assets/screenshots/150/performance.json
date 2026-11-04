@@ -1,0 +1,38 @@
+{
+  "scale": "1.5",
+  "font": "Cascadia Mono",
+  "screens": 2,
+  "os_reduced_motion": false,
+  "runs": [
+    {
+      "duration_ms": 2810.49,
+      "max_frame_ms": 34.55,
+      "paint_fps": 61.91,
+      "paints": 174,
+      "reason": "complete",
+      "timer_active_after": false
+    },
+    {
+      "duration_ms": 934.84,
+      "max_frame_ms": 23.12,
+      "paint_fps": 62.04,
+      "paints": 58,
+      "reason": "complete",
+      "timer_active_after": false
+    }
+  ],
+  "rss_before_mib": 129.45,
+  "rss_after_mib": 130.35,
+  "idle_timer_active": false,
+  "idle_cpu_percent_one_core": 0.0,
+  "device_pixel_ratio": 1.5,
+  "minimum_size": [
+    850,
+    550
+  ],
+  "console_viewport": [
+    464,
+    198
+  ],
+  "capture_frames": 0
+}
