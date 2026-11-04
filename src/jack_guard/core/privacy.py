@@ -43,9 +43,10 @@ class Privacy:
             cover.close()
             cover.deleteLater()
         self.covers.clear()
-        if self.active:
-            self.event("프라이버시 종료")
+        was_active = self.active
         self.active = False
+        if was_active:
+            self.event("프라이버시 종료")
         self.window.showNormal()
         self.window.raise_()
         self.window.activateWindow()

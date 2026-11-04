@@ -1,7 +1,9 @@
 from copy import deepcopy
 
+from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import (
     QCheckBox,
+    QComboBox,
     QDialog,
     QDialogButtonBox,
     QFileDialog,
@@ -117,6 +119,38 @@ class SettingsDialog(QDialog):
         clear.clicked.connect(self.clear_logs)
         logbox.addWidget(clear)
         self.tabs.addTab(logs, "로그")
+        motion = QWidget()
+        animation = QFormLayout(motion)
+        self.motion_checks = {}
+        for key, text in [
+            ("swarm_enabled", "Enable swarm intro"),
+            ("swarm_every_launch", "Play on every launch"),
+            ("reduce_motion", "Reduce motion automatically"),
+        ]:
+            check = QCheckBox(text)
+            check.setChecked(getattr(self.value, key))
+            self.motion_checks[key] = check
+            animation.addRow(check)
+        self.speed = QComboBox()
+        self.speed.addItems(["1x", "2x", "3x"])
+        self.speed.setCurrentIndex(self.value.swarm_speed - 1)
+        animation.addRow("Speed", self.speed)
+        self.cursors = QComboBox()
+        self.cursors.addItems(["3", "5", "8"])
+        self.cursors.setCurrentText(str(self.value.swarm_cursors))
+        animation.addRow("Cursor count", self.cursors)
+        replay = QPushButton("RUN  /  Replay saved intro")
+        replay.clicked.connect(self.replay_intro)
+        animation.addRow(replay)
+        note = QLabel(
+            "Windows 모션 감소 설정은 항상 우선합니다.\n"
+            "자동 감소는 느린 프레임 감지 시 즉시 완성 화면으로 전환합니다.\n"
+            "인트로 중 아무 키나 클릭으로 건너뛰기. 긴급 잠금: Ctrl+Shift+L.\n"
+            "기본값은 첫 실행에서만 재생. 트레이 복원에는 재생하지 않습니다."
+        )
+        note.setWordWrap(True)
+        animation.addRow(note)
+        self.tabs.addTab(motion, "Animation")
         about = QLabel(
             f"JACK GUARD {__version__}\nWindows 10/11 x64 · 개인용 프라이버시 보조 도구\n\n"
             "네트워크 전송 없음 · 관리자 권한 불필요\n"
@@ -131,6 +165,8 @@ class SettingsDialog(QDialog):
         )
         footer.accepted.connect(self.save)
         footer.rejected.connect(self.reject)
+        footer.button(QDialogButtonBox.StandardButton.Save).setText("저장 / Save")
+        footer.button(QDialogButtonBox.StandardButton.Cancel).setText("취소 / Cancel")
         layout.addWidget(footer)
 
     def confirm_termination(self, checked):
@@ -169,7 +205,15 @@ class SettingsDialog(QDialog):
         for key, listing in self.lists.items():
             setattr(result, key, [listing.item(i).text() for i in range(listing.count())])
         result.retention_days = self.days.value()
+        for key, check in self.motion_checks.items():
+            setattr(result, key, check.isChecked())
+        result.swarm_speed = self.speed.currentIndex() + 1
+        result.swarm_cursors = int(self.cursors.currentText())
         return validate(asdict(result))
+
+    def replay_intro(self):
+        self.reject()
+        QTimer.singleShot(0, self.c.replay_intro)
 
     def set_password(self):
         first, ok = QInputDialog.getText(

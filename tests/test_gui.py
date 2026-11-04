@@ -45,7 +45,7 @@ def test_controller_lifecycle_settings_and_tray(app, tmp_path, monkeypatch):
     try:
         controller.window.show()
         dialog = SettingsDialog(controller)
-        assert dialog.tabs.count() == 6
+        assert dialog.tabs.count() == 7
         assert not dialog.collect().terminate
         dialog.close()
         controller.window.close()
