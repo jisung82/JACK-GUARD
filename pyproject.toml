@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "jack-guard"
 version = "0.2.1"
 description = "Local Windows privacy companion"
+license = {file = "LICENSE"}
 requires-python = ">=3.12,<3.13"
 dependencies = ["PySide6-Essentials==6.10.2", "psutil==7.2.2"]
 

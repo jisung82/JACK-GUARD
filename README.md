@@ -3,8 +3,9 @@
 Windows 10 (1809 이상)/11 x64용 한국어 개인 프라이버시 보조 도구. 관리자 권한 없이 실행합니다.
 Python 3.12 · PySide6(Qt Widgets) · psutil · PyInstaller.
 
-**현재: 로컬 0.2.1 Terminal Edition 배포 후보. GitHub 공개 및 라이선스 선택 승인 전입니다.**
-공개 저장소·실제 Release·서명된 파일이 존재한다고 주장하지 않습니다.
+**0.2.1 Terminal Edition — MIT 라이선스.**
+[GitHub 저장소](https://github.com/jisung82/JACK-GUARD) · [릴리스 다운로드](https://github.com/jisung82/JACK-GUARD/releases/latest)
+코드 서명은 포함되지 않습니다.
 
 ![실제 Terminal Edition 화면](assets/screenshots/100/terminal.png)
 
@@ -58,7 +59,7 @@ Replay는 저장된 설정으로 실행합니다. Windows 모션 감소 설정�
 
 ## 사용
 
-공개 승인 및 배포 후 저장소 Releases에서 `JACK-GUARD-portable.zip`을 받아 **전체 압축을 풀고**
+저장소 Releases에서 `JACK-GUARD-portable.zip`을 받아 **전체 압축을 풀고**
 `JACK-GUARD/JACK-GUARD.exe`를 실행하세요. Python 설치가 필요 없습니다.
 단일 `JACK-GUARD.exe`도 제공하도록 빌드를 구성했습니다.
 ZIP 버전은 Qt DLL 교체가 가능하고 시작이 빠르므로 우선 권장합니다.
